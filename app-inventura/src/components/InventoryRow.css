@@ -1,0 +1,125 @@
+.row {
+  border-bottom: 1px solid #e0e0e0;
+  transition: background 0.15s;
+}
+
+.row:hover {
+  background: #f8f9fa;
+}
+
+.row-locked {
+  background: #e8f5e9;
+}
+
+.row td {
+  padding: 0.5rem;
+  font-size: 0.813rem;
+}
+
+.td-cislo {
+  font-weight: 600;
+  color: #424242;
+  min-width: 70px;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.td-popis {
+  font-weight: 500;
+  color: #212121;
+  min-width: 140px;
+  max-width: 200px;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.td-field {
+  white-space: nowrap;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: #1976d2;
+  color: white;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-width: 38px;
+  text-align: center;
+  margin-right: 0.5rem;
+}
+
+.inp {
+  width: 60px;
+  padding: 0.25rem 0.375rem;
+  border: 1px solid #bdbdbd;
+  border-radius: 0.25rem;
+  font-size: 0.813rem;
+  text-align: center;
+  margin-right: 0.5rem;
+}
+
+.inp:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+}
+
+.inp:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.res {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: #1565c0;
+  min-width: 35px;
+  text-align: center;
+}
+
+.td-note {
+  min-width: 120px;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.inp-note {
+  width: 100%;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #bdbdbd;
+  border-radius: 0.25rem;
+  font-size: 0.813rem;
+}
+
+.inp-note:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+}
+
+.inp-note:disabled {
+  background: #f5f5f5;
+}
+
+.td-check {
+  width: 50px;
+  text-align: center;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.chk {
+  width: 1.125rem;
+  height: 1.125rem;
+  cursor: pointer;
+  accent-color: #1976d2;
+}

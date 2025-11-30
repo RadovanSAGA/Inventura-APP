@@ -1,0 +1,36 @@
+.tbl-wrap {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  overflow-x: auto;
+}
+
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.tbl thead {
+  background: #1976d2;
+  color: white;
+}
+
+.tbl th {
+  padding: 0.625rem 0.5rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tbl th:last-child {
+  text-align: center;
+}
+
+.empty {
+  padding: 2rem;
+  text-align: center;
+  color: #757575;
+}
