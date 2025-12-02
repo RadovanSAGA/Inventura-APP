@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { InventoryItem } from '../types';
 import './InventoryRow.css';
 
@@ -13,6 +13,14 @@ export function InventoryRow({ item, onUpdate, onToggleLock }: InventoryRowProps
   const [input2, setInput2] = useState('');
   const [input3, setInput3] = useState('');
   const [poznamka, setPoznamka] = useState('');
+
+  // Reset len keď sa item.id zmení (nový item po resete)
+  useEffect(() => {
+    setInput1('');
+    setInput2('');
+    setInput3('');
+    setPoznamka('');
+  }, [item.id]);
 
   const calculateValue = (expression: string): number => {
     if (!expression || expression.trim() === '') return 0;
@@ -64,6 +72,7 @@ export function InventoryRow({ item, onUpdate, onToggleLock }: InventoryRowProps
           onChange={(e) => handleInput1Change(e.target.value)}
           disabled={item.locked}
           className="inp"
+          placeholder="0"
         />
         <span className="res">{item.hodnota1}</span>
       </td>
@@ -76,6 +85,7 @@ export function InventoryRow({ item, onUpdate, onToggleLock }: InventoryRowProps
           onChange={(e) => handleInput2Change(e.target.value)}
           disabled={item.locked}
           className="inp"
+          placeholder="0"
         />
         <span className="res">{item.hodnota2}</span>
       </td>
@@ -88,6 +98,7 @@ export function InventoryRow({ item, onUpdate, onToggleLock }: InventoryRowProps
           onChange={(e) => handleInput3Change(e.target.value)}
           disabled={item.locked}
           className="inp"
+          placeholder="0"
         />
         <span className="res">{item.hodnota3}</span>
       </td>

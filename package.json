@@ -1,0 +1,13 @@
+{
+  "name": "inventura-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start:server": "cd server && npm start",
+    "start:frontend": "cd app-inventura && npm run build && npm run preview"
+  },
+  "workspaces": [
+    "server",
+    "app-inventura"
+  ]
+}
