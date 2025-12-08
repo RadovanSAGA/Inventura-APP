@@ -151,12 +151,3 @@
   transform: scale(1.2);
 }
 
-/* ... všetok tvoj existujúci CSS ... */
-
-/* MOBILE FIX - len aby riadky netrčali */
-@media (max-width: 768px) {
-  .row td {
-    white-space: normal !important;
-    word-wrap: break-word !important;
-  }
-}
