@@ -21,15 +21,6 @@
   font-size: 0.875rem;
 }
 
-/* Desktop zobrazenie - predvolené */
-.mobile-row {
-  display: none;
-}
-
-.desktop-row {
-  display: table-row;
-}
-
 /* ČÍSLO - s rámčekom */
 .td-cislo {
   font-weight: 700;
@@ -60,7 +51,7 @@
   padding-right: 0.75rem;
 }
 
-/* BADGE */
+/* BADGE - menej výrazné */
 .badge {
   display: inline-block;
   padding: 0.375rem 0.625rem;
@@ -158,136 +149,4 @@
 
 .chk:checked {
   transform: scale(1.2);
-}
-
-/* ========== MOBILE RESPONSIVE ========== */
-@media (max-width: 768px) {
-  /* Skryť desktop verziu */
-  .desktop-row {
-    display: none;
-  }
-
-  /* Zobraziť mobile verziu */
-  .mobile-row {
-    display: table-row;
-  }
-
-  .mobile-card {
-    padding: 1rem;
-    background: white;
-    border-radius: 0.75rem;
-    border: 1px solid #e5e7eb;
-  }
-
-  .row-locked .mobile-card {
-    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-  }
-
-  .mobile-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid #f3f4f6;
-  }
-
-  .mobile-title {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    flex: 1;
-  }
-
-  .mobile-cislo {
-    font-weight: 700;
-    color: #374151;
-    font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
-    font-size: 0.875rem;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.375rem;
-    padding: 0.375rem 0.625rem;
-    display: inline-block;
-    width: fit-content;
-  }
-
-  .mobile-popis {
-    font-weight: 600;
-    color: #111827;
-    font-size: 0.9375rem;
-    line-height: 1.4;
-  }
-
-  .mobile-fields {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .mobile-field-group {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: nowrap;
-  }
-
-  .mobile-field-group .badge {
-    flex-shrink: 0;
-    min-width: 50px;
-    font-size: 0.6875rem;
-    padding: 0.375rem 0.5rem;
-  }
-
-  .mobile-field-group .inp {
-    width: 60px;
-    flex-shrink: 0;
-    padding: 0.5rem;
-    font-size: 0.875rem;
-    margin-right: 0.5rem;
-  }
-
-  .mobile-field-group .res {
-    flex: 1;
-    min-width: 0;
-    padding: 0.5rem;
-    font-size: 0.8125rem;
-  }
-
-  .mobile-note {
-    margin-top: 0.75rem;
-  }
-
-  .mobile-note .inp-note {
-    font-size: 0.8125rem;
-    padding: 0.625rem;
-  }
-
-  .mobile-header .chk {
-    flex-shrink: 0;
-    margin-left: 0.5rem;
-  }
-}
-
-/* Pre veľmi malé mobily */
-@media (max-width: 380px) {
-  .mobile-card {
-    padding: 0.75rem;
-  }
-
-  .mobile-field-group .badge {
-    min-width: 45px;
-    font-size: 0.625rem;
-  }
-
-  .mobile-field-group .inp {
-    width: 50px;
-    font-size: 0.8125rem;
-  }
-
-  .mobile-field-group .res {
-    font-size: 0.75rem;
-    padding: 0.375rem;
-  }
 }

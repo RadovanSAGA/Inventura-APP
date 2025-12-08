@@ -45,27 +45,3 @@
   color: #9ca3af;
   font-size: 1.125rem;
 }
-
-/* ========== MOBILE RESPONSIVE ========== */
-@media (max-width: 768px) {
-  .table-wrap {
-    border-radius: 0.5rem;
-  }
-
-  .table-scroll {
-    overflow-x: visible;
-  }
-
-  .inv-table {
-    min-width: 0;
-    display: block;
-  }
-
-  .inv-table thead {
-    display: none; /* Skryť hlavičku na mobile */
-  }
-
-  .inv-table tbody {
-    display: block;
-  }
-}
