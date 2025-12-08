@@ -1,24 +1,15 @@
 {
   "version": 2,
-  "name": "inventura",
   "builds": [
     {
-      "src": "server/server.js",
+      "src": "api/index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "server/server.js"
-    },
-    {
-      "src": "/health",
-      "dest": "server/server.js"
-    },
-    {
-      "src": "/",
-      "dest": "server/server.js"
+      "src": "/(.*)",
+      "dest": "api/index.js"
     }
   ]
 }
