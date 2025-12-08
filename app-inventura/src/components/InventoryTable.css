@@ -1,22 +1,19 @@
-.table-wrap {
+.tbl-wrap {
   background: white;
   border-radius: 1rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.table-scroll {
   overflow-x: auto;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  -webkit-overflow-scrolling: touch;
 }
 
-.inv-table {
+.tbl {
   width: 100%;
   border-collapse: collapse;
   min-width: 900px;
 }
 
-.inv-table thead {
+.tbl thead {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   position: sticky;
@@ -24,7 +21,7 @@
   z-index: 5;
 }
 
-.inv-table th {
+.tbl th {
   padding: 1.125rem 0.875rem;
   text-align: left;
   font-weight: 700;
@@ -35,7 +32,7 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.inv-table th:last-child {
+.tbl th:last-child {
   text-align: center;
 }
 
