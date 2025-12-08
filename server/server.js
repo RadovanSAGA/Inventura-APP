@@ -29,32 +29,9 @@ const limiter = rateLimit({
 
 app.use('/api/', limiter);
 
-// CORS configuration
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:3000',
-  /\.vercel\.app$/  // Allow all Vercel preview deployments
-];
-
+// CORS configuration - SIMPLIFIED FOR TESTING
 app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
-    if (!origin) return callback(null, true);
-    
-    // Check if origin is in allowedOrigins or matches regex
-    const isAllowed = allowedOrigins.some(allowed => {
-      if (allowed instanceof RegExp) {
-        return allowed.test(origin);
-      }
-      return allowed === origin;
-    });
-    
-    if (isAllowed || process.env.FRONTEND_URL === origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: true,  // Allow all origins temporarily
   credentials: true
 }));
 
