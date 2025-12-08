@@ -1,46 +1,45 @@
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
-const errorHandler = require('./middleware/errorHandler');
 const authRoutes = require('./routes/auth');
 const inventoryRoutes = require('./routes/inventory');
+const errorHandler = require('./middleware/errorHandler');
 
+// Initialize express app
 const app = express();
 
-// MongoDB connection
+// Connect to MongoDB
 connectDB();
 
-// Security headers
+// Security middleware
 app.use(helmet({
-  contentSecurityPolicy: false,
-  crossOriginEmbedderPolicy: false
+  contentSecurityPolicy: false, // Disable for API compatibility
 }));
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: 'Príliš veľa požiadaviek, skús to neskôr.'
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.'
 });
+
 app.use('/api/', limiter);
 
-// CORS - pre Vercel
+// CORS configuration
 const allowedOrigins = [
-  process.env.FRONTEND_URL,
   'http://localhost:5173',
   'http://localhost:3000',
-  /\.vercel\.app$/ // Povoliť všetky Vercel domény
+  /\.vercel\.app$/  // Allow all Vercel preview deployments
 ];
 
 app.use(cors({
   origin: function(origin, callback) {
-    // Povoliť requesty bez origin (napr. Postman, curl)
+    // Allow requests with no origin (mobile apps, Postman, etc.)
     if (!origin) return callback(null, true);
     
-    // Check ak origin je v allowedOrigins
+    // Check if origin is in allowedOrigins or matches regex
     const isAllowed = allowedOrigins.some(allowed => {
       if (allowed instanceof RegExp) {
         return allowed.test(origin);
@@ -48,36 +47,24 @@ app.use(cors({
       return allowed === origin;
     });
     
-    if (isAllowed) {
+    if (isAllowed || process.env.FRONTEND_URL === origin) {
       callback(null, true);
     } else {
-      callback(new Error('CORS policy violation'));
+      callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true
 }));
 
-// Body parser
+// Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Logging
-if (process.env.NODE_ENV === 'development') {
-  app.use((req, res, next) => {
-    console.log(`${req.method} ${req.path}`);
-    next();
-  });
-}
-
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/inventories', inventoryRoutes);
-
-// Health check
+// Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({
+  res.status(200).json({
     success: true,
-    message: 'Server is running',
+    message: 'Server is healthy',
     timestamp: new Date().toISOString()
   });
 });
@@ -87,6 +74,7 @@ app.get('/', (req, res) => {
   res.json({
     success: true,
     message: 'Inventura API',
+    version: '1.0.0',
     endpoints: {
       health: '/health',
       auth: '/api/auth/*',
@@ -94,6 +82,10 @@ app.get('/', (req, res) => {
     }
   });
 });
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/inventories', inventoryRoutes);
 
 // 404 handler
 app.use((req, res) => {
@@ -106,7 +98,7 @@ app.use((req, res) => {
 // Error handler
 app.use(errorHandler);
 
-// VERCEL EXPORT - DÔLEŽITÉ!
+// VERCEL EXPORT - CRITICAL!
 module.exports = app;
 
 // Local development only
@@ -115,4 +107,4 @@ if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
     console.log(`🚀 Server beží na porte ${PORT} v ${process.env.NODE_ENV} mode`);
   });
-} 
+}
