@@ -14,6 +14,7 @@ export function InventoryRow({ item, onUpdate, onToggleLock }: InventoryRowProps
   const [input3, setInput3] = useState('');
   const [poznamka, setPoznamka] = useState('');
 
+  // Reset len keď sa item.id zmení (nový item po resete)
   useEffect(() => {
     setInput1('');
     setInput2('');
@@ -59,138 +60,68 @@ export function InventoryRow({ item, onUpdate, onToggleLock }: InventoryRowProps
   };
 
   return (
-    <>
-      {/* Desktop verzia */}
-      <tr className={`row ${item.locked ? 'row-locked' : ''} desktop-row`}>
-        <td className="td-cislo">{item.cisloPolozky}</td>
-        <td className="td-popis">{item.popis}</td>
-        <td className="td-field">
-          <span className="badge">{item.baliacaJednotka}</span>
-          <input
-            type="text"
-            value={input1}
-            onChange={(e) => handleInput1Change(e.target.value)}
-            disabled={item.locked}
-            className="inp"
-            placeholder="0"
-          />
-          <span className="res">{item.hodnota1}</span>
-        </td>
-        <td className="td-field">
-          <span className="badge">{item.castkovaJedno}</span>
-          <input
-            type="text"
-            value={input2}
-            onChange={(e) => handleInput2Change(e.target.value)}
-            disabled={item.locked}
-            className="inp"
-            placeholder="0"
-          />
-          <span className="res">{item.hodnota2}</span>
-        </td>
-        <td className="td-field">
-          <span className="badge">{item.jednotka}</span>
-          <input
-            type="text"
-            value={input3}
-            onChange={(e) => handleInput3Change(e.target.value)}
-            disabled={item.locked}
-            className="inp"
-            placeholder="0"
-          />
-          <span className="res">{item.hodnota3}</span>
-        </td>
-        <td className="td-note">
-          <input
-            type="text"
-            value={poznamka}
-            onChange={(e) => handleNoteChange(e.target.value)}
-            disabled={item.locked}
-            className="inp-note"
-            placeholder="..."
-          />
-        </td>
-        <td className="td-check">
-          <input
-            type="checkbox"
-            checked={item.locked}
-            onChange={() => onToggleLock(item.id)}
-            className="chk"
-          />
-        </td>
-      </tr>
-
-      {/* Mobile verzia */}
-      <tr className={`row ${item.locked ? 'row-locked' : ''} mobile-row`}>
-        <td colSpan={7}>
-          <div className="mobile-card">
-            <div className="mobile-header">
-              <div className="mobile-title">
-                <span className="mobile-cislo">{item.cisloPolozky}</span>
-                <span className="mobile-popis">{item.popis}</span>
-              </div>
-              <input
-                type="checkbox"
-                checked={item.locked}
-                onChange={() => onToggleLock(item.id)}
-                className="chk"
-              />
-            </div>
-
-            <div className="mobile-fields">
-              <div className="mobile-field-group">
-                <span className="badge">{item.baliacaJednotka}</span>
-                <input
-                  type="text"
-                  value={input1}
-                  onChange={(e) => handleInput1Change(e.target.value)}
-                  disabled={item.locked}
-                  className="inp"
-                  placeholder="0"
-                />
-                <span className="res">{item.hodnota1}</span>
-              </div>
-
-              <div className="mobile-field-group">
-                <span className="badge">{item.castkovaJedno}</span>
-                <input
-                  type="text"
-                  value={input2}
-                  onChange={(e) => handleInput2Change(e.target.value)}
-                  disabled={item.locked}
-                  className="inp"
-                  placeholder="0"
-                />
-                <span className="res">{item.hodnota2}</span>
-              </div>
-
-              <div className="mobile-field-group">
-                <span className="badge">{item.jednotka}</span>
-                <input
-                  type="text"
-                  value={input3}
-                  onChange={(e) => handleInput3Change(e.target.value)}
-                  disabled={item.locked}
-                  className="inp"
-                  placeholder="0"
-                />
-                <span className="res">{item.hodnota3}</span>
-              </div>
-            </div>
-
-            <div className="mobile-note">
-              <input
-                type="text"
-                value={poznamka}
-                onChange={(e) => handleNoteChange(e.target.value)}
-                disabled={item.locked}
-                className="inp-note"
-                placeholder="Poznámka..."
-              />
-            </div>
-          </div>
-        </td>
-      </tr>
-    </>
+    <tr className={`row ${item.locked ? 'row-locked' : ''}`}>
+      <td className="td-cislo">{item.cisloPolozky}</td>
+      <td className="td-popis">{item.popis}</td>
+      
+      <td className="td-field">
+        <span className="badge">{item.baliacaJednotka}</span>
+        <input
+          type="text"
+          value={input1}
+          onChange={(e) => handleInput1Change(e.target.value)}
+          disabled={item.locked}
+          className="inp"
+          placeholder="0"
+        />
+        <span className="res">{item.hodnota1}</span>
+      </td>
+      
+      <td className="td-field">
+        <span className="badge">{item.castkovaJedno}</span>
+        <input
+          type="text"
+          value={input2}
+          onChange={(e) => handleInput2Change(e.target.value)}
+          disabled={item.locked}
+          className="inp"
+          placeholder="0"
+        />
+        <span className="res">{item.hodnota2}</span>
+      </td>
+      
+      <td className="td-field">
+        <span className="badge">{item.jednotka}</span>
+        <input
+          type="text"
+          value={input3}
+          onChange={(e) => handleInput3Change(e.target.value)}
+          disabled={item.locked}
+          className="inp"
+          placeholder="0"
+        />
+        <span className="res">{item.hodnota3}</span>
+      </td>
+      
+      <td className="td-note">
+        <input
+          type="text"
+          value={poznamka}
+          onChange={(e) => handleNoteChange(e.target.value)}
+          disabled={item.locked}
+          className="inp-note"
+          placeholder="..."
+        />
+      </td>
+      
+      <td className="td-check">
+        <input
+          type="checkbox"
+          checked={item.locked}
+          onChange={() => onToggleLock(item.id)}
+          className="chk"
+        />
+      </td>
+    </tr>
   );
 }
