@@ -2,13 +2,9 @@
   background: white;
   border-radius: 1rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  overflow: visible;
   border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.table-scroll {
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling na iOS */
+  -webkit-overflow-scrolling: touch;
 }
 
 .inv-table {
@@ -18,9 +14,9 @@
 }
 
 .inv-table thead {
-  background: #f9fafb;  /* Svetlo sivé pozadie */
-  color: #111827;       /* Čierny text */
-  border-bottom: 2px solid #e5e7eb;  /* Jemný border */
+  background: #f9fafb;
+  color: #111827;
+  border-bottom: 2px solid #e5e7eb;
   position: sticky;
   top: 0;
   z-index: 5;
@@ -34,7 +30,6 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   white-space: nowrap;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .inv-table th:last-child {
@@ -52,31 +47,27 @@
 @media (max-width: 768px) {
   .table-wrap {
     border-radius: 0.5rem;
-    margin: 0 -0.5rem; /* Roztiahne tabuľku na celú šírku */
-  }
-  
-  .table-scroll {
-    /* Pridá horizontálny scroll indicator */
+    margin: 0 -0.5rem;
     scrollbar-width: thin;
     scrollbar-color: #667eea #f3f4f6;
   }
   
-  .table-scroll::-webkit-scrollbar {
+  .table-wrap::-webkit-scrollbar {
     height: 8px;
   }
   
-  .table-scroll::-webkit-scrollbar-track {
+  .table-wrap::-webkit-scrollbar-track {
     background: #f3f4f6;
   }
   
-  .table-scroll::-webkit-scrollbar-thumb {
+  .table-wrap::-webkit-scrollbar-thumb {
     background: #667eea;
     border-radius: 4px;
   }
   
   .inv-table {
-    min-width: 1200px; /* Zachová všetky stĺpce viditeľné */
-    font-size: 0.875rem; /* Menší font na mobile */
+    min-width: 1200px;
+    font-size: 0.875rem;
   }
   
   .inv-table th {

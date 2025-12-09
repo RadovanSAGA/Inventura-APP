@@ -22,37 +22,35 @@ export function InventoryTable({ items, searchTerm, onUpdate, onToggleLock }: In
 
   return (
     <div className="table-wrap">
-      <div className="table-scroll">
-        <table className="inv-table">
-          <thead>
+      <table className="inv-table">
+        <thead>
+          <tr>
+            <th>ČÍSLO</th>
+            <th>POPIS</th>
+            <th>JEDNOTKA 1</th>
+            <th>JEDNOTKA 2</th>
+            <th>JEDNOTKA 3</th>
+            <th>POZNÁMKA</th>
+            <th>✓</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredItems.length > 0 ? (
+            filteredItems.map(item => (
+              <InventoryRow
+                key={item.id}
+                item={item}
+                onUpdate={onUpdate}
+                onToggleLock={onToggleLock}
+              />
+            ))
+          ) : (
             <tr>
-              <th>ČÍSLO</th>
-              <th>POPIS</th>
-              <th>JEDNOTKA 1</th>
-              <th>JEDNOTKA 2</th>
-              <th>JEDNOTKA 3</th>
-              <th>POZNÁMKA</th>
-              <th>✓</th>
+              <td colSpan={7} className="empty">Žiadne položky</td>
             </tr>
-          </thead>
-          <tbody>
-            {filteredItems.length > 0 ? (
-              filteredItems.map(item => (
-                <InventoryRow
-                  key={item.id}
-                  item={item}
-                  onUpdate={onUpdate}
-                  onToggleLock={onToggleLock}
-                />
-              ))
-            ) : (
-              <tr>
-                <td colSpan={7} className="empty">Žiadne položky</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }
