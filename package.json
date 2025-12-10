@@ -1,13 +1,11 @@
 {
-  "name": "inventura-monorepo",
+  "name": "inventura-backend",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start:server": "cd server && npm start",
-    "start:frontend": "cd app-inventura && npm run build && npm run preview"
+    "vercel-build": "echo 'Backend deployment'"
   },
-  "workspaces": [
-    "server",
-    "app-inventura"
-  ]
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }
