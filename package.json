@@ -2,10 +2,14 @@
   "name": "inventura-backend",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "vercel-build": "echo 'Backend deployment'"
-  },
-  "engines": {
-    "node": ">=18.0.0"
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0",
+    "helmet": "^7.0.0",
+    "express-rate-limit": "^6.0.0"
   }
 }
