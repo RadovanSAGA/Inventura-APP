@@ -227,47 +227,7 @@
   color: #10b981;
 }
 
-/* Print Styles */
-@media print {
-  body * {
-    visibility: hidden;
-  }
-  
-  .print-document,
-  .print-document * {
-    visibility: visible;
-  }
-  
-  .print-document {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    background: white;
-    padding: 0;
-    overflow: visible;
-  }
-  
-  .no-print {
-    display: none !important;
-  }
-  
-  @page {
-    size: A4 portrait;
-    margin: 1.5cm;
-  }
-  
-  .page-container {
-    page-break-after: always;
-    margin: 0;
-    padding: 0;
-    border: none;
-  }
-  
-  .page-container:last-child {
-    page-break-after: auto;
-  }
-}
+
 
 /* ========== MOBILE RESPONSIVE ========== */
 @media (max-width: 768px) {

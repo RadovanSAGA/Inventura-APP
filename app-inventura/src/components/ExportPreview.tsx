@@ -12,7 +12,7 @@ export function ExportPreview({ items, onClose }: ExportPreviewProps) {
   const timeStr = currentDate.toLocaleTimeString('sk-SK');
 
   // Rozdelenie na strany (25 položiek/strana)
-  const itemsPerPage = 25;
+  const itemsPerPage = 35; 
   const pages: InventoryItem[][] = [];
 
   for (let i = 0; i < items.length; i += itemsPerPage) {
@@ -25,8 +25,48 @@ export function ExportPreview({ items, onClose }: ExportPreviewProps) {
   const totalPages = pages.length;
 
   const handlePrint = () => {
-    window.print();
-  };
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) return;
+
+  const content = document.querySelector('.print-document')?.innerHTML || '';
+  
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Inventúra ${dateStr}</title>
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        .page-container { padding: 1cm; page-break-after: always; }
+        .page-container:last-child { page-break-after: auto; }
+        .document-header { display: flex; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+        .document-title { text-align: center; margin: 1rem 0; border-bottom: 1px solid #000; padding-bottom: 0.5rem; }
+        .section-name { font-weight: bold; margin: 0.5rem 0; }
+        .document-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .document-table th, .document-table td { border: 1px solid #000; padding: 4px; text-align: left; }
+        .document-table th { background: #f0f0f0; }
+        .unit-cell { display: flex; justify-content: space-between; }
+        .unit-label { font-size: 10px; }
+        .unit-value { font-weight: bold; }
+        .document-footer { margin-top: 1rem; border-top: 1px solid #000; padding-top: 0.5rem; text-align: center; }
+        @page { size: A4; margin: 0.5cm; }
+      </style>
+    </head>
+    <body>
+      ${content}
+    </body>
+    </html>
+  `);
+  
+  printWindow.document.close();
+  printWindow.focus();
+  
+  setTimeout(() => {
+    printWindow.print();
+    printWindow.close();
+  }, 250);
+};
 
   const handleDownloadCSV = () => {
     const header = 'IL.,Číslo položky,Stav,Popis,Baliaca jednotka,Hodnota J1,Čiastková jednotka,Hodnota J2,Jednotka,Hodnota J3';
@@ -64,7 +104,7 @@ export function ExportPreview({ items, onClose }: ExportPreviewProps) {
     <div className="export-preview-overlay" onClick={onClose}>
       <div className="export-preview-modal" onClick={(e) => e.stopPropagation()}>
         
-        <div className="export-header no-print">
+        <div className="export-header">
           <div>
             <h2>📊 Náhľad exportu</h2>
             <p className="export-subtitle">INVENTURA {dateStr}</p>
@@ -163,13 +203,13 @@ export function ExportPreview({ items, onClose }: ExportPreviewProps) {
           ))}
         </div>
 
-        <div className="export-actions no-print">
+        <div className="export-actions">
           <button onClick={onClose} className="btn-cancel">Zrušiť</button>
           <button onClick={handleDownloadCSV} className="btn-download">💾 Stiahnuť CSV</button>
           <button onClick={handlePrint} className="btn-print">🖨️ Vytlačiť</button>
         </div>
 
-        <div className="export-info no-print">
+        <div className="export-info">
           📋 Vytlačí sa <strong>{totalPages} strán</strong> ({items.length} položiek)
         </div>
       </div>
