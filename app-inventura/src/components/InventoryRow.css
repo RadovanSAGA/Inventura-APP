@@ -33,6 +33,13 @@
   background: white;
 }
 
+.td-il {
+  font-weight: 600;
+  color: #6479d9;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
 /* POPIS - s rámčekom */
 .td-popis {
   font-weight: 600;

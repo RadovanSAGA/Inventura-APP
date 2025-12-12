@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { ManageItems } from '../components/ManageItems';
 import { MaterialsList } from '../components/MaterialsList';
@@ -20,6 +20,30 @@ export function Dashboard() {
   const [passwordPrompt, setPasswordPrompt] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState(false);
+  
+  // ZOOM / VEĽKOSŤ TEXTU
+  const [fontSize, setFontSize] = useState(() => {
+    const saved = localStorage.getItem('app-font-size');
+    return saved ? parseInt(saved) : 100;
+  });
+
+  // Aplikuj veľkosť na celú stránku
+  useEffect(() => {
+    document.documentElement.style.fontSize = `${fontSize}%`;
+    localStorage.setItem('app-font-size', fontSize.toString());
+  }, [fontSize]);
+
+  const increaseFontSize = () => {
+    if (fontSize < 150) setFontSize(prev => prev + 10);
+  };
+
+  const decreaseFontSize = () => {
+    if (fontSize > 60) setFontSize(prev => prev - 10);
+  };
+
+  const resetFontSize = () => {
+    setFontSize(100);
+  };
 
   // Inventúry
   const {
@@ -91,6 +115,16 @@ export function Dashboard() {
       
       {menuOpen && (
         <div className="menu-dropdown">
+          {/* VEĽKOSŤ TEXTU */}
+          <div className="menu-font-size">
+            <span>Aa Veľkosť textu</span>
+            <div className="font-size-controls">
+              <button onClick={decreaseFontSize} disabled={fontSize <= 60}>−</button>
+              <span className="font-size-value">{fontSize}%</span>
+              <button onClick={increaseFontSize} disabled={fontSize >= 150}>+</button>
+            </div>
+          </div>
+          <hr />
           <button onClick={() => { setCurrentPage('materials'); setMenuOpen(false); }}>
             📋 Zoznam surovín
           </button>

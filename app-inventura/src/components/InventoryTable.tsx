@@ -25,6 +25,7 @@ export function InventoryTable({ items, searchTerm, onUpdate, onToggleLock }: In
       <table className="inv-table">
         <thead>
           <tr>
+            <th>IL.</th>
             <th>ČÍSLO</th>
             <th>POPIS</th>
             <th>JEDNOTKA 1</th>
@@ -46,7 +47,7 @@ export function InventoryTable({ items, searchTerm, onUpdate, onToggleLock }: In
             ))
           ) : (
             <tr>
-              <td colSpan={7} className="empty">Žiadne položky</td>
+              <td colSpan={8} className="empty">Žiadne položky</td>
             </tr>
           )}
         </tbody>

@@ -14,7 +14,6 @@ export function InventoryRow({ item, onUpdate, onToggleLock }: InventoryRowProps
   const [input3, setInput3] = useState('');
   const [poznamka, setPoznamka] = useState('');
 
-  // Reset len keď sa item.id zmení (nový item po resete)
   useEffect(() => {
     setInput1('');
     setInput2('');
@@ -61,6 +60,7 @@ export function InventoryRow({ item, onUpdate, onToggleLock }: InventoryRowProps
 
   return (
     <tr className={`row ${item.locked ? 'row-locked' : ''}`}>
+      <td className="td-il">MRA</td>
       <td className="td-cislo">{item.cisloPolozky}</td>
       <td className="td-popis">{item.popis}</td>
       
