@@ -10,13 +10,17 @@ interface MonthlyInventoryProps {
 
 export function MonthlyInventory({ onBack }: MonthlyInventoryProps) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split('T')[0]
+  );
+  
   const {
     items,
     updateItem,
     toggleLock,
     resetAll,
     exportToCSV
-  } = useInventory('monthly'); // 'monthly' storage key
+  } = useInventory('monthly');
 
   const lockedCount = items.filter(item => item.locked).length;
 
@@ -24,13 +28,13 @@ export function MonthlyInventory({ onBack }: MonthlyInventoryProps) {
     <div className="inventory-page">
       <div className="inventory-header">
         <button onClick={onBack} className="btn-back">← Späť</button>
-        <h2>📈 Mesačná inventúra</h2>
-        <div className="inventory-date">
-          {new Date().toLocaleDateString('sk-SK', { 
-            year: 'numeric', 
-            month: 'long'
-          })}
-        </div>
+        <h2>🗓️ Mesačná inventúra</h2>
+        <input
+          type="date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+          className="date-input"
+        />
       </div>
 
       <FilterBar
@@ -41,6 +45,7 @@ export function MonthlyInventory({ onBack }: MonthlyInventoryProps) {
         totalItems={items.length}
         lockedCount={lockedCount}
         items={items}
+        selectedDate={selectedDate}
       />
 
       <InventoryTable

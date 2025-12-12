@@ -4,14 +4,15 @@ import './ExportPreview.css';
 interface ExportPreviewProps {
   items: InventoryItem[];
   onClose: () => void;
+  selectedDate?: string;
 }
 
-export function ExportPreview({ items, onClose }: ExportPreviewProps) {
-  const currentDate = new Date();
+export function ExportPreview({ items, onClose, selectedDate }: ExportPreviewProps) {
+  const currentDate = selectedDate ? new Date(selectedDate) : new Date();
   const dateStr = currentDate.toLocaleDateString('sk-SK');
-  const timeStr = currentDate.toLocaleTimeString('sk-SK');
+  const timeStr = new Date().toLocaleTimeString('sk-SK');
 
-  // Rozdelenie na strany (25 položiek/strana)
+  // Rozdelenie na strany (35 položiek/strana)
   const itemsPerPage = 35; 
   const pages: InventoryItem[][] = [];
 
@@ -25,48 +26,48 @@ export function ExportPreview({ items, onClose }: ExportPreviewProps) {
   const totalPages = pages.length;
 
   const handlePrint = () => {
-  const printWindow = window.open('', '_blank');
-  if (!printWindow) return;
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
 
-  const content = document.querySelector('.print-document')?.innerHTML || '';
-  
-  printWindow.document.write(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>Inventúra ${dateStr}</title>
-      <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; font-size: 12px; }
-        .page-container { padding: 1cm; page-break-after: always; }
-        .page-container:last-child { page-break-after: auto; }
-        .document-header { display: flex; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 0.5rem; margin-bottom: 1rem; }
-        .document-title { text-align: center; margin: 1rem 0; border-bottom: 1px solid #000; padding-bottom: 0.5rem; }
-        .section-name { font-weight: bold; margin: 0.5rem 0; }
-        .document-table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        .document-table th, .document-table td { border: 1px solid #000; padding: 4px; text-align: left; }
-        .document-table th { background: #f0f0f0; }
-        .unit-cell { display: flex; justify-content: space-between; }
-        .unit-label { font-size: 10px; }
-        .unit-value { font-weight: bold; }
-        .document-footer { margin-top: 1rem; border-top: 1px solid #000; padding-top: 0.5rem; text-align: center; }
-        @page { size: A4; margin: 0.5cm; }
-      </style>
-    </head>
-    <body>
-      ${content}
-    </body>
-    </html>
-  `);
-  
-  printWindow.document.close();
-  printWindow.focus();
-  
-  setTimeout(() => {
-    printWindow.print();
-    printWindow.close();
-  }, 250);
-};
+    const content = document.querySelector('.print-document')?.innerHTML || '';
+    
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Inventúra ${dateStr}</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: Arial, sans-serif; font-size: 12px; }
+          .page-container { padding: 1cm; page-break-after: always; }
+          .page-container:last-child { page-break-after: auto; }
+          .document-header { display: flex; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+          .document-title { text-align: center; margin: 1rem 0; border-bottom: 1px solid #000; padding-bottom: 0.5rem; }
+          .section-name { font-weight: bold; margin: 0.5rem 0; }
+          .document-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+          .document-table th, .document-table td { border: 1px solid #000; padding: 4px; text-align: left; }
+          .document-table th { background: #f0f0f0; }
+          .unit-cell { display: flex; justify-content: space-between; }
+          .unit-label { font-size: 10px; }
+          .unit-value { font-weight: bold; }
+          .document-footer { margin-top: 1rem; border-top: 1px solid #000; padding-top: 0.5rem; text-align: center; }
+          @page { size: A4; margin: 0.5cm; }
+        </style>
+      </head>
+      <body>
+        ${content}
+      </body>
+      </html>
+    `);
+    
+    printWindow.document.close();
+    printWindow.focus();
+    
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 250);
+  };
 
   const handleDownloadCSV = () => {
     const header = 'IL.,Číslo položky,Stav,Popis,Baliaca jednotka,Hodnota J1,Čiastková jednotka,Hodnota J2,Jednotka,Hodnota J3';
@@ -140,7 +141,7 @@ export function ExportPreview({ items, onClose }: ExportPreviewProps) {
                 <>
                   <div className="document-title">
                     <div className="title-main">Formulár inventúry / Deň (Dynamický) / Umiestnenie všetkých položiek</div>
-                    <div className="title-date">{dateStr}, st</div>
+                    <div className="title-date">{dateStr}</div>
                   </div>
                   <div className="section-name">Reštika</div>
                 </>

@@ -10,33 +10,31 @@ interface WeeklyInventoryProps {
 
 export function WeeklyInventory({ onBack }: WeeklyInventoryProps) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split('T')[0]
+  );
+  
   const {
     items,
     updateItem,
     toggleLock,
     resetAll,
     exportToCSV
-  } = useInventory('weekly'); // 'weekly' storage key
+  } = useInventory('weekly');
 
   const lockedCount = items.filter(item => item.locked).length;
-
-  // Zistiť číslo týždňa
-  const getWeekNumber = (date: Date) => {
-    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-    const pastDaysOfYear = (date.getTime() - firstDayOfYear.getTime()) / 86400000;
-    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
-  };
-
-  const weekNumber = getWeekNumber(new Date());
 
   return (
     <div className="inventory-page">
       <div className="inventory-header">
         <button onClick={onBack} className="btn-back">← Späť</button>
         <h2>📊 Týždenná inventúra</h2>
-        <div className="inventory-date">
-          Týždeň {weekNumber} • {new Date().getFullYear()}
-        </div>
+        <input
+          type="date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+          className="date-input"
+        />
       </div>
 
       <FilterBar
@@ -47,6 +45,7 @@ export function WeeklyInventory({ onBack }: WeeklyInventoryProps) {
         totalItems={items.length}
         lockedCount={lockedCount}
         items={items}
+        selectedDate={selectedDate}
       />
 
       <InventoryTable

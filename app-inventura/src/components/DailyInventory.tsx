@@ -10,13 +10,17 @@ interface DailyInventoryProps {
 
 export function DailyInventory({ onBack }: DailyInventoryProps) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split('T')[0]
+  );
+  
   const {
     items,
     updateItem,
     toggleLock,
     resetAll,
     exportToCSV
-  } = useInventory('daily'); // 'daily' storage key
+  } = useInventory('daily');
 
   const lockedCount = items.filter(item => item.locked).length;
 
@@ -25,14 +29,12 @@ export function DailyInventory({ onBack }: DailyInventoryProps) {
       <div className="inventory-header">
         <button onClick={onBack} className="btn-back">← Späť</button>
         <h2>📅 Denná inventúra</h2>
-        <div className="inventory-date">
-          {new Date().toLocaleDateString('sk-SK', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-          })}
-        </div>
+        <input
+          type="date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+          className="date-input"
+        />
       </div>
 
       <FilterBar
@@ -43,6 +45,7 @@ export function DailyInventory({ onBack }: DailyInventoryProps) {
         totalItems={items.length}
         lockedCount={lockedCount}
         items={items}
+        selectedDate={selectedDate}
       />
 
       <InventoryTable

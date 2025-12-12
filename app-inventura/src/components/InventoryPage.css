@@ -9,36 +9,88 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 2rem;
-  flex-wrap: wrap;
-  gap: 1rem;
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
   background: white;
   border-radius: 1rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  gap: 1rem;
+}
+
+.btn-back {
+  padding: 0.75rem 1.25rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-back:hover {
+  background: #2563eb;
+  transform: translateX(-2px);
 }
 
 .inventory-header h2 {
-  font-size: 2rem;
-  font-weight: 800;
-  color: #111827;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
   margin: 0;
+  flex: 1;
+  text-align: center;
 }
 
-.inventory-date {
+.date-input {
+  padding: 0.75rem 1rem;
   font-size: 1rem;
   font-weight: 600;
-  color: #667eea;
-  background: #f0f4ff;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
+  color: #3b82f6;
+  background: #eff6ff;
+  border: 2px solid #bfdbfe;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
+.date-input:hover {
+  border-color: #3b82f6;
+  background: #dbeafe;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* ========== MOBILE ========== */
 @media (max-width: 768px) {
   .inventory-page {
     padding: 1rem;
   }
-  
+
+  .inventory-header {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+
   .inventory-header h2 {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
+    order: -1;
+    text-align: center;
+  }
+
+  .btn-back {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .date-input {
+    width: 100%;
+    text-align: center;
   }
 }

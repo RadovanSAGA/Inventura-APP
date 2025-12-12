@@ -6,7 +6,6 @@ type InventoryType = 'daily' | 'weekly' | 'monthly';
 
 interface ManageItemsProps {
   onBack: () => void;
-  // Funkcie pre každý typ inventúry
   dailyItems: InventoryItem[];
   weeklyItems: InventoryItem[];
   monthlyItems: InventoryItem[];
@@ -48,7 +47,6 @@ export function ManageItems({
     stav: 'Aktívne'
   });
 
-  // Vyber správne items a funkcie podľa activeType
   const currentItems = activeType === 'daily' 
     ? dailyItems 
     : activeType === 'weekly' 
@@ -72,6 +70,18 @@ export function ManageItems({
     : activeType === 'weekly' 
     ? onDeleteWeekly 
     : onDeleteMonthly;
+
+  // VYMAZAŤ VŠETKO
+  const handleDeleteAll = () => {
+    const typeLabel = getTypeLabel();
+    if (window.confirm(`Naozaj chceš vymazať VŠETKY položky z ${typeLabel} inventúry? (${currentItems.length} položiek)`)) {
+      if (window.confirm('Táto akcia je NEVRATNÁ! Si si istý?')) {
+        currentItems.forEach(item => {
+          handleDelete(item.id);
+        });
+      }
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,9 +130,9 @@ export function ManageItems({
 
   const getTypeLabel = () => {
     switch (activeType) {
-      case 'daily': return '📅 Denná';
-      case 'weekly': return '📊 Týždenná';
-      case 'monthly': return '📈 Mesačná';
+      case 'daily': return 'Denná';
+      case 'weekly': return 'Týždenná';
+      case 'monthly': return 'Mesačná';
     }
   };
 
@@ -131,11 +141,18 @@ export function ManageItems({
       <div className="manage-header">
         <button onClick={onBack} className="btn-back">← Späť</button>
         <h2>📦 Správa položiek</h2>
-        {!showAddForm && (
-          <button onClick={() => setShowAddForm(true)} className="btn-add">
-            ➕ Pridať položku
-          </button>
-        )}
+        <div className="header-actions">
+          {!showAddForm && (
+            <button onClick={() => setShowAddForm(true)} className="btn-add">
+              ➕ Pridať položku
+            </button>
+          )}
+          {currentItems.length > 0 && (
+            <button onClick={handleDeleteAll} className="btn-delete-all">
+              🗑️ Vymazať všetko
+            </button>
+          )}
+        </div>
       </div>
 
       {/* TABY PRE TYP INVENTÚRY */}
@@ -148,7 +165,7 @@ export function ManageItems({
             setEditingId(null);
           }}
         >
-          📅 Denná inventúra
+          📅 Denná ({dailyItems.length})
         </button>
         <button
           className={`type-tab ${activeType === 'weekly' ? 'active' : ''}`}
@@ -158,7 +175,7 @@ export function ManageItems({
             setEditingId(null);
           }}
         >
-          📊 Týždenná inventúra
+          📊 Týždenná ({weeklyItems.length})
         </button>
         <button
           className={`type-tab ${activeType === 'monthly' ? 'active' : ''}`}
@@ -168,17 +185,17 @@ export function ManageItems({
             setEditingId(null);
           }}
         >
-          📈 Mesačná inventúra
+          📈 Mesačná ({monthlyItems.length})
         </button>
       </div>
 
       <div className="active-type-indicator">
-        Upravuješ: <strong>{getTypeLabel()} inventúru</strong>
+        Upravuješ: <strong>{getTypeLabel()} inventúru</strong> ({currentItems.length} položiek)
       </div>
 
       {showAddForm && (
         <div className="item-form">
-          <h3>{editingId ? '✏️ Upraviť položku' : '➕ Nová položka'} ({getTypeLabel()})</h3>
+          <h3>{editingId ? '✏️ Upraviť položku' : '➕ Nová položka'}</h3>
           <form onSubmit={handleSubmit}>
             <div className="form-row">
               <div className="form-group">

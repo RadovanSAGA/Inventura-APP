@@ -1,4 +1,4 @@
- import { useState } from 'react';
+import { useState } from 'react';
 import { ExportPreview } from './ExportPreview';
 import type { InventoryItem } from '../types';
 import './FilterBar.css';
@@ -11,6 +11,7 @@ interface FilterBarProps {
   totalItems: number;
   lockedCount: number;
   items: InventoryItem[];
+  selectedDate?: string;
 }
 
 export function FilterBar({
@@ -20,7 +21,8 @@ export function FilterBar({
   onReset,
   totalItems,
   lockedCount,
-  items
+  items,
+  selectedDate
 }: FilterBarProps) {
   const [showExportPreview, setShowExportPreview] = useState(false);
   const progress = totalItems > 0 ? Math.round((lockedCount / totalItems) * 100) : 0;
@@ -57,7 +59,7 @@ export function FilterBar({
         <ExportPreview
           items={items}
           onClose={() => setShowExportPreview(false)}
-          title="INVENTURA"
+          selectedDate={selectedDate}
         />
       )}
     </>

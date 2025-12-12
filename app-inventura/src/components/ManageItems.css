@@ -423,6 +423,26 @@
   }
 }
 
+.header-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-delete-all {
+  padding: 0.75rem 1.25rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-delete-all:hover {
+  background: #dc2626;
+}
+
 @media (max-width: 480px) {
   .inventory-type-tabs {
     grid-template-columns: 1fr;

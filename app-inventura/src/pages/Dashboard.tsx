@@ -1,9 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { inventoryService } from '../services/inventory';
-import { Header } from '../components/Header';
-import { FilterBar } from '../components/FilterBar';
-import { InventoryTable } from '../components/InventoryTable';
 import { ManageItems } from '../components/ManageItems';
 import { MaterialsList } from '../components/MaterialsList';
 import { DailyInventory } from '../components/DailyInventory';
@@ -13,28 +9,19 @@ import { useInventory } from '../hooks/useInventory';
 import type { InventoryItem } from '../types';
 import './Dashboard.css';
 
-type Page = 'inventory' | 'manage-items' | 'materials-list' | 'daily-inventory' | 'weekly-inventory' | 'monthly-inventory';
+type Page = 'home' | 'daily' | 'weekly' | 'monthly' | 'materials' | 'settings' | 'manage-items';
+
+const SETTINGS_PASSWORD = '4213';
 
 export function Dashboard() {
   const { user, logout } = useAuth();
-  const [currentPage, setCurrentPage] = useState<Page>('inventory');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [syncing, setSyncing] = useState(false);
-  const [lastSync, setLastSync] = useState<Date | null>(null);
+  const [currentPage, setCurrentPage] = useState<Page>('home');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [passwordPrompt, setPasswordPrompt] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
 
-  // Hlavná inventúra (default)
-  const {
-    items,
-    updateItem,
-    toggleLock,
-    resetAll,
-    exportToCSV,
-    addItem,
-    editItem,
-    deleteItem
-  } = useInventory();
-
-  // Denná inventúra
+  // Inventúry
   const {
     items: dailyItems,
     addItem: addDailyItem,
@@ -42,7 +29,6 @@ export function Dashboard() {
     deleteItem: deleteDailyItem
   } = useInventory('daily');
 
-  // Týždenná inventúra
   const {
     items: weeklyItems,
     addItem: addWeeklyItem,
@@ -50,7 +36,6 @@ export function Dashboard() {
     deleteItem: deleteWeeklyItem
   } = useInventory('weekly');
 
-  // Mesačná inventúra
   const {
     items: monthlyItems,
     addItem: addMonthlyItem,
@@ -58,7 +43,7 @@ export function Dashboard() {
     deleteItem: deleteMonthlyItem
   } = useInventory('monthly');
 
-  // Helper funkcia pre vytvorenie položky
+  // Helper funkcia
   const createItem = (newItem: any): InventoryItem => {
     const id = `item-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     return {
@@ -73,152 +58,213 @@ export function Dashboard() {
     };
   };
 
-  // Handler funkcie pre ManageItems
   const handleAddDaily = (item: any) => addDailyItem(createItem(item));
   const handleAddWeekly = (item: any) => addWeeklyItem(createItem(item));
   const handleAddMonthly = (item: any) => addMonthlyItem(createItem(item));
 
-  // Automatické uloženie do backendu
-  const syncToBackend = async () => {
-    try {
-      setSyncing(true);
-      const currentDate = new Date().toISOString().split('T')[0];
-      
-      await inventoryService.create({
-        date: currentDate,
-        items: items,
-        status: 'draft'
-      });
-      
-      setLastSync(new Date());
-    } catch (error) {
-      console.error('Sync error:', error);
-    } finally {
-      setSyncing(false);
+  // Overenie hesla pre nastavenia
+  const handleSettingsClick = () => {
+    setPasswordPrompt(true);
+    setPasswordInput('');
+    setPasswordError(false);
+    setMenuOpen(false);
+  };
+
+  const handlePasswordSubmit = () => {
+    if (passwordInput === SETTINGS_PASSWORD) {
+      setPasswordPrompt(false);
+      setCurrentPage('settings');
+    } else {
+      setPasswordError(true);
     }
   };
 
-  const lockedCount = items.filter(item => item.locked).length;
+  // MENU COMPONENT
+  const MenuBar = () => (
+    <div className="menu-bar">
+      <div className="menu-logo" onClick={() => setCurrentPage('home')}>
+        📦 Inventúra
+      </div>
+      <button className="menu-hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+        ☰
+      </button>
+      
+      {menuOpen && (
+        <div className="menu-dropdown">
+          <button onClick={() => { setCurrentPage('materials'); setMenuOpen(false); }}>
+            📋 Zoznam surovín
+          </button>
+          <button onClick={handleSettingsClick}>
+            ⚙️ Nastavenia 🔒
+          </button>
+          <hr />
+          <button onClick={logout} className="menu-logout">
+            🚪 Odhlásiť sa
+          </button>
+        </div>
+      )}
+    </div>
+  );
 
-  // Stránka: Denná inventúra
-  if (currentPage === 'daily-inventory') {
+  // PASSWORD MODAL
+  const PasswordModal = () => (
+    <div className="password-overlay" onClick={() => setPasswordPrompt(false)}>
+      <div className="password-modal" onClick={e => e.stopPropagation()}>
+        <h3>🔒 Zadaj heslo</h3>
+        <input
+          type="password"
+          value={passwordInput}
+          onChange={e => setPasswordInput(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && handlePasswordSubmit()}
+          placeholder="Heslo..."
+          autoFocus
+        />
+        {passwordError && <p className="password-error">❌ Nesprávne heslo!</p>}
+        <div className="password-buttons">
+          <button onClick={() => setPasswordPrompt(false)}>Zrušiť</button>
+          <button onClick={handlePasswordSubmit} className="btn-primary">Potvrdiť</button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // ========== PAGES ==========
+
+  // ÚVODNÁ OBRAZOVKA
+  if (currentPage === 'home') {
     return (
       <div className="dashboard">
-        <Header onNavigate={setCurrentPage} />
+        <MenuBar />
+        {passwordPrompt && <PasswordModal />}
         
-        <div className="dashboard-topbar">
-          <div className="user-info">
-            <span>👤 {user?.username}</span>
+        <div className="home-screen">
+          <div className="welcome-section">
+            <h1>👋 Ahoj, {user?.username}!</h1>
+            <p>Vyber typ inventúry:</p>
           </div>
-          <div className="actions">
-            <button onClick={logout} className="btn-logout">
-              🚪 Odhlásiť
+          
+          <div className="inventory-buttons">
+            <button 
+              className="inventory-card daily"
+              onClick={() => setCurrentPage('daily')}
+            >
+              <span className="card-icon">📅</span>
+              <span className="card-title">Denná</span>
+              <span className="card-count">{dailyItems.length} položiek</span>
+            </button>
+            
+            <button 
+              className="inventory-card weekly"
+              onClick={() => setCurrentPage('weekly')}
+            >
+              <span className="card-icon">📆</span>
+              <span className="card-title">Týždenná</span>
+              <span className="card-count">{weeklyItems.length} položiek</span>
+            </button>
+            
+            <button 
+              className="inventory-card monthly"
+              onClick={() => setCurrentPage('monthly')}
+            >
+              <span className="card-icon">🗓️</span>
+              <span className="card-title">Mesačná</span>
+              <span className="card-count">{monthlyItems.length} položiek</span>
             </button>
           </div>
-        </div>
-
-        <div className="container">
-          <DailyInventory onBack={() => setCurrentPage('inventory')} />
         </div>
       </div>
     );
   }
 
-  // Stránka: Týždenná inventúra
-  if (currentPage === 'weekly-inventory') {
+  // DENNÁ INVENTÚRA
+  if (currentPage === 'daily') {
     return (
       <div className="dashboard">
-        <Header onNavigate={setCurrentPage} />
-        
-        <div className="dashboard-topbar">
-          <div className="user-info">
-            <span>👤 {user?.username}</span>
-          </div>
-          <div className="actions">
-            <button onClick={logout} className="btn-logout">
-              🚪 Odhlásiť
-            </button>
-          </div>
-        </div>
-
+        <MenuBar />
+        {passwordPrompt && <PasswordModal />}
         <div className="container">
-          <WeeklyInventory onBack={() => setCurrentPage('inventory')} />
+          <DailyInventory onBack={() => setCurrentPage('home')} />
         </div>
       </div>
     );
   }
 
-  // Stránka: Mesačná inventúra
-  if (currentPage === 'monthly-inventory') {
+  // TÝŽDENNÁ INVENTÚRA
+  if (currentPage === 'weekly') {
     return (
       <div className="dashboard">
-        <Header onNavigate={setCurrentPage} />
-        
-        <div className="dashboard-topbar">
-          <div className="user-info">
-            <span>👤 {user?.username}</span>
-          </div>
-          <div className="actions">
-            <button onClick={logout} className="btn-logout">
-              🚪 Odhlásiť
-            </button>
-          </div>
-        </div>
-
+        <MenuBar />
+        {passwordPrompt && <PasswordModal />}
         <div className="container">
-          <MonthlyInventory onBack={() => setCurrentPage('inventory')} />
+          <WeeklyInventory onBack={() => setCurrentPage('home')} />
         </div>
       </div>
     );
   }
 
-  // Stránka: Zoznam surovín
-  if (currentPage === 'materials-list') {
+  // MESAČNÁ INVENTÚRA
+  if (currentPage === 'monthly') {
     return (
       <div className="dashboard">
-        <Header onNavigate={setCurrentPage} />
-        
-        <div className="dashboard-topbar">
-          <div className="user-info">
-            <span>👤 {user?.username}</span>
-          </div>
-          <div className="actions">
-            <button onClick={logout} className="btn-logout">
-              🚪 Odhlásiť
-            </button>
-          </div>
+        <MenuBar />
+        {passwordPrompt && <PasswordModal />}
+        <div className="container">
+          <MonthlyInventory onBack={() => setCurrentPage('home')} />
         </div>
+      </div>
+    );
+  }
 
+  // ZOZNAM SUROVÍN
+  if (currentPage === 'materials') {
+    return (
+      <div className="dashboard">
+        <MenuBar />
+        {passwordPrompt && <PasswordModal />}
         <div className="container">
           <MaterialsList
             dailyItems={dailyItems}
             weeklyItems={weeklyItems}
             monthlyItems={monthlyItems}
-            onBack={() => setCurrentPage('inventory')}
+            onBack={() => setCurrentPage('home')}
           />
         </div>
       </div>
     );
   }
 
+  // NASTAVENIA
+  if (currentPage === 'settings') {
+    return (
+      <div className="dashboard">
+        <MenuBar />
+        <div className="container">
+          <div className="settings-page">
+            <button className="back-button" onClick={() => setCurrentPage('home')}>
+              ← Späť
+            </button>
+            <h2>⚙️ Nastavenia</h2>
+            
+            <div className="settings-list">
+              <button 
+                className="settings-item"
+                onClick={() => setCurrentPage('manage-items')}
+              >
+                <span>✏️ Správa položiek</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  // Stránka: Správa položiek
+  // SPRÁVA POLOŽIEK
   if (currentPage === 'manage-items') {
     return (
       <div className="dashboard">
-        <Header onNavigate={setCurrentPage} />
-        
-        <div className="dashboard-topbar">
-          <div className="user-info">
-            <span>👤 {user?.username}</span>
-          </div>
-          <div className="actions">
-            <button onClick={logout} className="btn-logout">
-              🚪 Odhlásiť
-            </button>
-          </div>
-        </div>
-
+        <MenuBar />
         <div className="container">
           <ManageItems
             dailyItems={dailyItems}
@@ -233,53 +279,12 @@ export function Dashboard() {
             onDeleteDaily={deleteDailyItem}
             onDeleteWeekly={deleteWeeklyItem}
             onDeleteMonthly={deleteMonthlyItem}
-            onBack={() => setCurrentPage('inventory')}
+            onBack={() => setCurrentPage('settings')}
           />
         </div>
       </div>
     );
   }
 
-  // Hlavná stránka: Inventúra
-  return (
-    <div className="dashboard">
-      <Header onNavigate={setCurrentPage} />
-      
-      <div className="dashboard-topbar">
-        <div className="user-info">
-          <span>👤 {user?.username}</span>
-          <span className="sync-status">
-            {syncing ? '🔄 Synchronizujem...' : lastSync ? `✓ Uložené ${lastSync.toLocaleTimeString()}` : ''}
-          </span>
-        </div>
-        <div className="actions">
-          <button onClick={syncToBackend} disabled={syncing} className="btn-sync">
-            💾 Uložiť
-          </button>
-          <button onClick={logout} className="btn-logout">
-            🚪 Odhlásiť
-          </button>
-        </div>
-      </div>
-
-      <div className="container">
-        <FilterBar
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          onExport={exportToCSV}
-          onReset={resetAll}
-          totalItems={items.length}
-          lockedCount={lockedCount}
-          items={items}
-        />
-
-        <InventoryTable
-          items={items}
-          searchTerm={searchTerm}
-          onUpdate={updateItem}
-          onToggleLock={toggleLock}
-        />
-      </div>
-    </div>
-  );
+  return null;
 }
