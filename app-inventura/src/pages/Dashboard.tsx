@@ -6,7 +6,6 @@ import { DailyInventory } from '../components/DailyInventory';
 import { WeeklyInventory } from '../components/WeeklyInventory';
 import { MonthlyInventory } from '../components/MonthlyInventory';
 import { useInventory } from '../hooks/useInventory';
-import type { InventoryItem } from '../types';
 import './Dashboard.css';
 
 type Page = 'home' | 'daily' | 'weekly' | 'monthly' | 'materials' | 'settings' | 'manage-items';
@@ -41,13 +40,10 @@ export function Dashboard() {
     if (fontSize > 60) setFontSize(prev => prev - 10);
   };
 
-  const resetFontSize = () => {
-    setFontSize(100);
-  };
-
   // Inventúry
   const {
     items: dailyItems,
+    loading: dailyLoading,
     addItem: addDailyItem,
     editItem: editDailyItem,
     deleteItem: deleteDailyItem
@@ -55,6 +51,7 @@ export function Dashboard() {
 
   const {
     items: weeklyItems,
+    loading: weeklyLoading,
     addItem: addWeeklyItem,
     editItem: editWeeklyItem,
     deleteItem: deleteWeeklyItem
@@ -62,29 +59,11 @@ export function Dashboard() {
 
   const {
     items: monthlyItems,
+    loading: monthlyLoading,
     addItem: addMonthlyItem,
     editItem: editMonthlyItem,
     deleteItem: deleteMonthlyItem
   } = useInventory('monthly');
-
-  // Helper funkcia
-  const createItem = (newItem: any): InventoryItem => {
-    const id = `item-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    return {
-      id,
-      ...newItem,
-      hodnota1: 0,
-      hodnota2: 0,
-      hodnota3: 0,
-      celkom: 0,
-      poznamka: '',
-      locked: false
-    };
-  };
-
-  const handleAddDaily = (item: any) => addDailyItem(createItem(item));
-  const handleAddWeekly = (item: any) => addWeeklyItem(createItem(item));
-  const handleAddMonthly = (item: any) => addMonthlyItem(createItem(item));
 
   // Overenie hesla pre nastavenia
   const handleSettingsClick = () => {
@@ -162,6 +141,9 @@ export function Dashboard() {
     </div>
   );
 
+  // Loading state
+  const isLoading = dailyLoading || weeklyLoading || monthlyLoading;
+
   // ========== PAGES ==========
 
   // ÚVODNÁ OBRAZOVKA
@@ -177,34 +159,38 @@ export function Dashboard() {
             <p>Vyber typ inventúry:</p>
           </div>
           
-          <div className="inventory-buttons">
-            <button 
-              className="inventory-card daily"
-              onClick={() => setCurrentPage('daily')}
-            >
-              <span className="card-icon">📅</span>
-              <span className="card-title">Denná</span>
-              <span className="card-count">{dailyItems.length} položiek</span>
-            </button>
-            
-            <button 
-              className="inventory-card weekly"
-              onClick={() => setCurrentPage('weekly')}
-            >
-              <span className="card-icon">📆</span>
-              <span className="card-title">Týždenná</span>
-              <span className="card-count">{weeklyItems.length} položiek</span>
-            </button>
-            
-            <button 
-              className="inventory-card monthly"
-              onClick={() => setCurrentPage('monthly')}
-            >
-              <span className="card-icon">🗓️</span>
-              <span className="card-title">Mesačná</span>
-              <span className="card-count">{monthlyItems.length} položiek</span>
-            </button>
-          </div>
+          {isLoading ? (
+            <div className="loading">Načítavam položky...</div>
+          ) : (
+            <div className="inventory-buttons">
+              <button 
+                className="inventory-card daily"
+                onClick={() => setCurrentPage('daily')}
+              >
+                <span className="card-icon">📅</span>
+                <span className="card-title">Denná</span>
+                <span className="card-count">{dailyItems.length} položiek</span>
+              </button>
+              
+              <button 
+                className="inventory-card weekly"
+                onClick={() => setCurrentPage('weekly')}
+              >
+                <span className="card-icon">📆</span>
+                <span className="card-title">Týždenná</span>
+                <span className="card-count">{weeklyItems.length} položiek</span>
+              </button>
+              
+              <button 
+                className="inventory-card monthly"
+                onClick={() => setCurrentPage('monthly')}
+              >
+                <span className="card-icon">🗓️</span>
+                <span className="card-title">Mesačná</span>
+                <span className="card-count">{monthlyItems.length} položiek</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -304,9 +290,9 @@ export function Dashboard() {
             dailyItems={dailyItems}
             weeklyItems={weeklyItems}
             monthlyItems={monthlyItems}
-            onAddDaily={handleAddDaily}
-            onAddWeekly={handleAddWeekly}
-            onAddMonthly={handleAddMonthly}
+            onAddDaily={addDailyItem}
+            onAddWeekly={addWeeklyItem}
+            onAddMonthly={addMonthlyItem}
             onEditDaily={editDailyItem}
             onEditWeekly={editWeeklyItem}
             onEditMonthly={editMonthlyItem}
