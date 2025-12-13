@@ -80,7 +80,7 @@ app.use(errorHandler);
 // VERCEL EXPORT - CRITICAL!
 module.exports = app;
 
-// Local development only
+// Local development only + 
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 5001;
   app.listen(PORT, () => {
